@@ -1,0 +1,8 @@
+streamlit
+finance-datareader
+beautifulsoup4
+requests
+apscheduler
+pandas
+SQLAlchemy
+psycopg2-binary
