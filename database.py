@@ -7,7 +7,11 @@ def get_engine():
     """Streamlit secrets에 DB_URL이 있으면 PostgreSQL, 없으면 로컬 SQLite 사용"""
     try:
         if 'DB_URL' in st.secrets:
-            return create_engine(st.secrets['DB_URL'])
+            url = st.secrets['DB_URL']
+            if url.startswith("postgres://"):
+                url = url.replace("postgres://", "postgresql://", 1)
+            # 연결 유실 방지를 위한 pool_pre_ping 옵션과 외부 DB를 위한 sslmode 추가
+            return create_engine(url, pool_pre_ping=True, connect_args={'options': '-c statement_timeout=10000'})
     except Exception:
         pass
         
