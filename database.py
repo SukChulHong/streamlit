@@ -72,8 +72,11 @@ def add_stock(symbol, name):
     success = False
     if is_supabase():
         try:
+            st.text("Supabase add_stock")  
             client = get_supabase_client()
+            st.text("Supabase add_stock2")  
             client.table("portfolio").insert({"symbol": symbol, "name": name}).execute()
+            st.text("Supabase add_stock3")  
             success = True
         except Exception as e:
             print(f"Supabase add_stock error: {e}")
