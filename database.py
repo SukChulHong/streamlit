@@ -14,21 +14,25 @@ def is_supabase():
     return False
 
 def get_supabase_client():
-    from st_supabase_connection import SupabaseConnection
-    #return st.connection("supabase", type=SupabaseConnection)
-    #from st_supabase_connection import SupabaseConnection
+    try:
+        from st_supabase_connection import SupabaseConnection
+        #return st.connection("supabase", type=SupabaseConnection)
+        #from st_supabase_connection import SupabaseConnection
 
-    # 1. 연결 객체 생성
-    # 자동으로 .streamlit/secrets.toml의 [connections.supabase] 섹션을 읽어옵니다.
-    conn = st.connection("supabase", type=SupabaseConnection)
+        # 1. 연결 객체 생성
+        # 자동으로 .streamlit/secrets.toml의 [connections.supabase] 섹션을 읽어옵니다.
+        conn = st.connection("supabase", type=SupabaseConnection)
 
-    # 2. 데이터 쿼리 (예: 'users' 테이블의 모든 데이터 가져오기)
-    # ttl은 캐싱 시간입니다 (600초 동안 결과 유지)
-    rows = conn.query("*", table="portfolio", ttl=600).execute()
+        # 2. 데이터 쿼리 (예: 'users' 테이블의 모든 데이터 가져오기)
+        # ttl은 캐싱 시간입니다 (600초 동안 결과 유지)
+        rows = conn.query("*", table="portfolio", ttl=600).execute()
 
-    # 3. 데이터 출력
-    st.dataframe(rows.data)
-    return conn 
+        # 3. 데이터 출력
+        st.dataframe(rows.data)
+        return conn 
+    except Exception as e:
+        st.error(f"Supabase 연결 실패: {e}")
+        return None
 
 def get_engine():
     """SQLite 전용 엔진 생성 (Supabase 사용 시 호출 안 함)"""
