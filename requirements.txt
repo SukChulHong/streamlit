@@ -6,5 +6,5 @@ apscheduler
 pandas
 SQLAlchemy
 psycopg2-binary
-st-supabase-connection
+st-supabase-connection>=1.0.0
 supabase
