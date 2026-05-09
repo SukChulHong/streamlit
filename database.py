@@ -1,5 +1,3 @@
-from pandas.core.arrays import _arrow_string_mixins
-from streamlit.proto import ArrowNamedDataSet_pb2
 from sqlalchemy import create_engine, text
 import pandas as pd
 import os

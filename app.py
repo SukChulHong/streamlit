@@ -98,8 +98,29 @@ else:
     
     if not summary_df.empty:
         st.markdown("💡 **목록에서 종목을 클릭하시면 아래에 상세 정보(차트 및 뉴스)가 표시됩니다.**")
+        
+        # 등락률 색상 지정을 위한 스타일 함수
+        def color_change_rate(val):
+            try:
+                if val > 0:
+                    return 'color: #ff4b4b' # 빨간색
+                elif val < 0:
+                    return 'color: #31333f' # 기본색 (또는 파란색 #0068c9)
+            except:
+                pass
+            return ''
+
+        # 등락률 파란색/빨간색 적용 및 포맷팅
+        def style_positive_negative(val):
+            if isinstance(val, (int, float)):
+                color = 'red' if val > 0 else 'blue' if val < 0 else 'black'
+                return f'color: {color}'
+            return ''
+
+        styled_df = summary_df.style.applymap(style_positive_negative, subset=['등락률(%)'])
+
         event = st.dataframe(
-            summary_df,
+            styled_df,
             use_container_width=True,
             hide_index=True,
             on_select="rerun",
