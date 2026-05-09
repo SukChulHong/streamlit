@@ -1,3 +1,4 @@
+from streamlit.proto import ArrowNamedDataSet_pb2
 from sqlalchemy import create_engine, text
 import pandas as pd
 import os
@@ -9,11 +10,29 @@ def is_supabase():
         return True
     if 'SUPABASE_URL' in st.secrets:
         return True
+    if 'SUPABASE_KEY' in st.secrets:
+        return True
+
     return False
 
 def get_supabase_client():
-    from st_supabase_connection import SupabaseConnection
-    return st.connection("supabase", type=SupabaseConnection)
+    try:
+        from st_supabase_connection import SupabaseConnection
+        #return st.connection("supabase", type=SupabaseConnection)
+        # 1. 연결 객체 생성
+        # 자동으로 .streamlit/secrets.toml의 [connections.supabase] 섹션을 읽어옵니다.
+        conn = st.connection("supabase", type=SupabaseConnection)
+
+        # 2. 데이터 쿼리 (예: 'users' 테이블의 모든 데이터 가져오기)
+        # ttl은 캐싱 시간입니다 (600초 동안 결과 유지)
+        rows = conn.query("*", table="portfolio", ttl=600).execute()
+        # 3. 데이터 출력
+        st.dataframe(rows.data)
+        st.text("Supabase 연결")
+        return conn          
+    except Exception as e:
+        st.error(f"Supabase 연결 실패: {e}")
+        return None
 
 def get_engine():
     """SQLite 전용 엔진 생성 (Supabase 사용 시 호출 안 함)"""
@@ -74,7 +93,7 @@ def add_stock(symbol, name):
         try:
             st.text("Supabase add_stock")  
             client = get_supabase_client()
-            st.text("Supabase add_stock2")  
+            st.text("Supabase add_stock2: symbol=" + symbol + "name=" + name)  
             client.table("portfolio").insert({"symbol": symbol, "name": name}).execute()
             st.text("Supabase add_stock3")  
             success = True
