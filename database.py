@@ -22,17 +22,17 @@ def get_supabase_client():
         # 1. 연결 객체 생성
         # 자동으로 .streamlit/secrets.toml의 [connections.supabase] 섹션을 읽어옵니다.
         conn = st.connection("supabase", type=SupabaseConnection)
-        st.text("Supabase 1")
+        #st.text("Supabase 1")
         # 2. 데이터 쿼리 (예: 'users' 테이블의 모든 데이터 가져오기)
         # ttl은 캐싱 시간입니다 (600초 동안 결과 유지)
         #rows = conn.query("*", table="portfolio", ttl=600).execute()
 
         # query() 대신 client를 직접 사용하여 호출
         # .client를 쓰면 원래 supabase-py 문법을 그대로 사용합니다.
-        rows = conn.table("portfolio").select("*").execute()
-        st.text("Supabase test")
+        #rows = conn.table("portfolio").select("*").execute()
+        #st.text("Supabase test")
         # 3. 데이터 출력
-        st.dataframe(rows.data)
+        #st.dataframe(rows.data)
         return conn 
     except Exception as e:
         st.error(f"Supabase 연결 실패: {e}")
