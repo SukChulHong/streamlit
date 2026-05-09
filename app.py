@@ -117,7 +117,7 @@ else:
                 return f'color: {color}'
             return ''
 
-        styled_df = summary_df.style.applymap(style_positive_negative, subset=['등락률(%)'])
+        styled_df = summary_df.style.map(style_positive_negative, subset=['등락률(%)'])
 
         event = st.dataframe(
             styled_df,
