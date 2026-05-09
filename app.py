@@ -46,6 +46,7 @@ with st.sidebar:
             new_name = new_name.strip()
             with st.spinner("종목 코드 검색 중..."):
                 symbol = fetcher.get_stock_code_by_name(new_name)
+                st.text(symbol) 
             if symbol:
                 if db.add_stock(symbol, new_name):
                     st.success(f"'{new_name}' ({symbol}) 추가 완료!")
