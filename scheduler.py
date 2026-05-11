@@ -1,6 +1,6 @@
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import database as db
 import fetcher
 
@@ -21,12 +21,15 @@ def send_telegram_message(token, chat_id, text):
 
 def monitor_stocks():
     """등록된 주식을 모니터링하여 조건에 맞으면 알림을 보내고 일별 데이터 저장"""
-    now = datetime.now()
+    # 한국 시간 (UTC+9) 설정
+    kst = timezone(timedelta(hours=9))
+    now = datetime.now(kst)
+
     # 주말 제외
     if now.weekday() >= 5:
         return
-    # 오전 9시 ~ 오후 4시까지만 실행
-    if not (9 <= now.hour < 16):
+    # 오전 9시 ~ 오후 4시(16:59)까지만 실행
+    if not (9 <= now.hour <= 16):
         return
 
     token = db.get_setting("telegram_token")
